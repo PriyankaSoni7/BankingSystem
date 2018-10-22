@@ -6,7 +6,6 @@ class CreateAccounts < ActiveRecord::Migration[5.2]
       t.string :acc_type
       t.references :bank, index: true, foreign_key: true
       t.references :user, index: true, foreign_key: true
-
       t.timestamps
     end
   end
