@@ -1,4 +1,4 @@
-class LoanController < ApplicationController
+class LoansController < ApplicationController
   skip_before_action :verify_authenticity_token
     
   def new
@@ -77,7 +77,7 @@ class LoanController < ApplicationController
   
   private
     def loan_params
-      params.require(:loan).permit(:loan_type, :amount, :int_rate )
-   end
-
+      params.require(:loan).permit(:loan_type, :amount, :int_rate, :user_id)
+    end
+    
 end

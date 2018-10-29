@@ -1,38 +1,47 @@
 require 'rails_helper'
 
-RSpec.describe Loan, :type => :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+RSpec.describe Loan, type: :model do
+  context 'loan validation' do
+    it 'is a valid factory' do
+      expect(FactoryBot.create(:loan)).to be_valid
+    end
 
-   before(:all) do
-    @loan = create(:loan)
-  end
-  
-  it "is valid with valid attributes" do
-    expect(@loan).to be_valid
-  end
-  
-  it "has a unique accountnumber" do
-    loan = build(:loan, acc_no: "xyz123")
-    expect(loan).to_not be_valid
-  end
-  
-  it "has a balance less than 500" do
-    loan = build(:loan, balance: <500)
-    expect(loan).to_not be_valid
-  end
-  
-  it "is not valid without a accountnumber " do 
-    loan = build(:loan, acc_no: nil)
-    expect(bank).to_not be_valid
-  end
-  
-  it "is not valid without a balance" do 
-    bank = build(:bank, balance: nil)
-    expect(bank).to_not be_valid
-  end
-  
-  it "is not valid without an acc_type" do
-    bank = build(:bank, acc_type: nil)
-    expect(bank).to_not be_valid
+    it 'does not have blank user_id' do
+      expect(FactoryBot.build(:loan, user_id: '')).to be_invalid
+    end
+    it 'is invalid without amount' do
+      expect(FactoryBot.build(:loan, amount: nil)).not_to be_valid
+    end
+    it 'is invalid without rate' do
+      expect(FactoryBot.build(:loan, int_rate: nil)).to be_invalid
+    end
+    it 'can only take amount in number' do
+      expect(FactoryBot.build(:loan, amount: 'million')).to be_invalid
+    end
+    it 'can only take interest in number' do
+      expect(FactoryBot.build(:loan, interest: 'three')).to be_invalid
+    end
+    it 'can only take time_limit in number' do
+      expect(FactoryBot.build(:loan, amount: 'three year')).to be_invalid
+    end
+
+    it 'is invalid with blank type' do
+      expect(FactoryBot.build(:loan, loan_type: '')).to be_invalid
+    end
+    it 'has valid type' do
+      expect(FactoryBot.build(:loan, loan_type: 'Education_Loan')).to be_valid
+    end
+    it 'has valid loan_type' do
+      expect(FactoryBot.build(:loan, loan_type: 'Home_Loan')).to be_valid
+    end
+    it 'has valid loan_type' do
+      expect(FactoryBot.build(:loan, loan_type: 'Personal_loan')).to be_valid
+    end
+    it 'has valid loan_type' do
+      expect(FactoryBot.build(:loan, loan_type: 'Business_loan')).to be_valid
+    end
+    it 'has valid loan_type' do
+      expect(FactoryBot.build(:loan, loan_type: 'Car_Loan')).to be_valid
+    end
   end
 end

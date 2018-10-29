@@ -1,8 +1,9 @@
 FactoryBot.define do
-  factory :creditcard do
-    card_no { 1 }
-    expiry_date { "2018-10-17" }
-    issue_date { "2018-10-17" }
-    cash_limit { 1 }
+  factory :user do
+    card_no { Faker::Number.card_no }
+    expiry_date { Faker::Number.expiry_date } 
+    issue_date { Faker::Number.issue_date) }
+    cash_limit { Faker::Number.between(0, 50000) }
+   # branch_id { Faker::Number.number(10)}
   end
 end

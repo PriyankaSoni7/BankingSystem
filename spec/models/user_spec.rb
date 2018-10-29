@@ -1,38 +1,29 @@
 require 'rails_helper'
 
-RSpec.describe User, :type => :model do
-  pending "add some examples to (or delete) #{__FILE__}"
-
-   before(:all) do
-    @bank = create(:bank)
-  end
-  
-  it "is valid with valid attributes" do
-    expect(@bank).to be_valid
-  end
-  
-  it "has a unique accountnumber" do
-    bank = build(:bank, acc_no: "xyz123")
-    expect(bank).to_not be_valid
-  end
-  
-  it "has a balance less than 500" do
-    bank = build(:bank, balance: <500)
-    expect(bank).to_not be_valid
-  end
-  
-  it "is not valid without a accountnumber " do 
-    bank = build(:bank, acc_no: nil)
-    expect(bank).to_not be_valid
-  end
-  
-  it "is not valid without a balance" do 
-    bank = build(:bank, balance: nil)
-    expect(bank).to_not be_valid
-  end
-  
-  it "is not valid without an acc_type" do
-    bank = build(:bank, acc_type: nil)
-    expect(bank).to_not be_valid
+RSpec.describe User, type: :model do
+  context 'user validation' do
+    it 'has valid factory' do
+      expect(FactoryBot.build(:user)).to be_valid
+    end
+    it 'is invalid without name ' do
+      expect(FactoryBot.build(:user, name: nil)).to be_invalid
+    end
+    it 'is invalid without address ' do
+      expect(FactoryBot.build(:user, address: nil)).to be_invalid
+    end
+    it 'is invalid without contact_no ' do
+      expect(FactoryBot.build(:user, phone_no: nil)).to be_invalid
+    end
+    it 'is invalid to take character for contact_no' do
+      expect(FactoryBot.build(:user, phone_no: 'jhgjf12')).to be_invalid
+    end
+    it 'is invalid to exceed 10 digit  contact_no' do
+      expect(
+        FactoryBot.build(:user, phone_no: '9898797678912')
+      ).to be_invalid
+    end
+    it 'is invalid to has less then 10 digit  contact_no' do
+      expect(FactoryBot.build(:user, phone_no: '98912')).to be_invalid
+    end   
   end
 end

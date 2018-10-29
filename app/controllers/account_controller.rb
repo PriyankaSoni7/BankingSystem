@@ -1,4 +1,4 @@
-class AccountController < ApplicationController
+class AccountsController < ApplicationController
   skip_before_action :verify_authenticity_token
   
   def new
@@ -14,10 +14,10 @@ class AccountController < ApplicationController
     respond_to do |format|
       format.json { render json: { account: @account }, status: :ok }
     end
-    rescue ActiveRecord::RecordNotFound => e
-      respond_to do |format|
-        format.json { render json: { error: e.message }, status: :not_found }
-      end
+  rescue ActiveRecord::RecordNotFound => e
+    respond_to do |format|
+      format.json { render json: { error: e.message }, status: :not_found }
+    end
   end
     
   def create
@@ -37,10 +37,10 @@ class AccountController < ApplicationController
       @account.destroy
       format.json { render json: {}, status: :ok }
     end
-    rescue ActiveRecord::RecordNotFound => e
-      respond_to do |format|
-        format.json { render json: { error: e.message }, status: :unprocessable_entity }
-      end
+  rescue ActiveRecord::RecordNotFound => e
+    respond_to do |format|
+      format.json { render json: { error: e.message }, status: :unprocessable_entity }
+    end
   end
     
   def index
@@ -56,10 +56,10 @@ class AccountController < ApplicationController
     respond_to do |format|
       format.json { render json: { account: @account }, status: :ok }
     end
-    rescue ActiveRecord::RecordNotFound => e
-      respond_to do |format|
-        format.json { render json: { error: e.message }, status: :not_found }
-      end
+  rescue ActiveRecord::RecordNotFound => e
+    respond_to do |format|
+      format.json { render json: { error: e.message }, status: :not_found }
+    end
   end
     
   def update
@@ -71,7 +71,7 @@ class AccountController < ApplicationController
         format.json { render json: @account.errors, status: :unprocessable_entity }
       end
     end
-    rescue StandardError => e
+  rescue StandardError => e
     respond_to do |format|
       format.json { render json: { error: e.message }, status: :unprocessable_entity }
     end
@@ -81,7 +81,6 @@ class AccountController < ApplicationController
   private
 
     def account_params
-      params.require(:account).permit(:acc_no, :balance, :acc_type )
+      params.require(:account).permit( :acc_no, :balance, :acc_type, :user_id, :bank_id)
     end
-
 end

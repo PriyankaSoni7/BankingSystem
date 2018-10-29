@@ -9,7 +9,7 @@ class Creditcard < ApplicationRecord
 
     def max_cash_limit
         if self.cash_limit > 50000
-   	       errors.add(:cash_limit, "card limit exceeds 50000")
+           errors.add(:cash_limit, "card limit exceeds 50000")
         end
     end
 

@@ -1,38 +1,67 @@
 require 'rails_helper'
 
-RSpec.describe Transaction, :type => :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+RSpec.describe Transaction, type: :model do
+  context 'Transaction validation' do
+    it 'has valid factory' do
+      expect(FactoryBot.build(:transaction)).to be_valid
+    end
+    it 'is invalid without a account' do
+      expect(FactoryBot.build(:transaction, account_id: nil)).to be_invalid
+    end
+    it 'is invalid without operation' do
+      expect(
+        FactoryBot.build(:transaction, operation: nil)
+      ).to be_invalid
+    end
+    it 'is invalid to has zero amount' do
+      expect(FactoryBot.build(:transaction, amount: '0')).to be_invalid
+    end
+    it 'is invalid to has less then zero amount' do
+      expect(FactoryBot.build(:transaction, amount: '-100')).to be_invalid
+    end
+    it 'has valid operation' do
+      expect(
+        FactoryBot.build(:transaction, operation: 'withdrawal')
+      ).to be_valid
+    end
+    it 'has valid operation' do
+      expect(
+        FactoryBot.build(:transaction, operation: 'deposite')
+      ).to be_valid
+    end
+    it 'is invalid without valid condition' do
+      @a = FactoryBot.create(:account, balance: '1000')
 
-   before(:all) do
-    @bank = create(:bank)
-  end
-  
-  it "is valid with valid attributes" do
-    expect(@bank).to be_valid
-  end
-  
-  it "has a unique accountnumber" do
-    bank = build(:bank, acc_no: "xyz123")
-    expect(bank).to_not be_valid
-  end
-  
-  it "has a balance less than 500" do
-    bank = build(:bank, balance: <500)
-    expect(bank).to_not be_valid
-  end
-  
-  it "is not valid without a accountnumber " do 
-    bank = build(:bank, acc_no: nil)
-    expect(bank).to_not be_valid
-  end
-  
-  it "is not valid without a balance" do 
-    bank = build(:bank, balance: nil)
-    expect(bank).to_not be_valid
-  end
-  
-  it "is not valid without an acc_type" do
-    bank = build(:bank, acc_type: nil)
-    expect(bank).to_not be_valid
+      @t = FactoryBot.build(
+        :transaction,
+        operation: 'withdraw',
+        amount: '4000',
+        account_id: @a.id
+      )
+
+      expect(@t).to be_invalid
+    end
+    it 'is update balance after withdrawal' do
+      @a = FactoryBot.create(:account, balance: '1000')
+      @t = FactoryBot.create(
+        :transaction,
+        operation: 'withdraw',
+        amount: '500',
+        account_id: @a.id
+      )
+      @left = @a.balance - @t.amount
+      expect(@t.account.balance).to eq(@left)
+    end
+    it 'is update balance after deposit ' do
+      @a = FactoryBot.create(:account, balance: '1000')
+      @t = FactoryBot.create(
+        :transaction,
+        operation: 'deposit',
+        amount: '500',
+        account_id: @a.id
+      )
+      @left = @a.balance + @t.amount
+      expect(@t.account.balance).to eq(@left)
+    end
   end
 end
